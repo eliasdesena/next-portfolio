@@ -1,26 +1,71 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
+  @font-face {
+    font-family: 'Satoshi';
+    src: url('/font-satoshi/Satoshi-Variable.woff2') format('woff2'),
+         url('/font-satoshi/Satoshi-Variable.woff') format('woff'),
+         url('/font-satoshi/Satoshi-Variable.ttf') format('truetype');
+    font-weight: 300 900;
+    font-display: swap;
+    font-style: normal;
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  @font-face {
+    font-family: 'Satoshi';
+    src: url('/font-satoshi/Satoshi-VariableItalic.woff2') format('woff2'),
+         url('/font-satoshi/Satoshi-VariableItalic.woff') format('woff'),
+         url('/font-satoshi/Satoshi-VariableItalic.ttf') format('truetype');
+    font-weight: 300 900;
+    font-display: swap;
+    font-style: italic;
+  }
 
-@media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --font-sans: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-serif: 'Cormorant Garamond', Georgia, Cambria, 'Times New Roman', Times, serif;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply font-sans bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .btn {
+    @apply px-8 py-4 bg-neutral dark:bg-accent-navy text-text-light dark:text-text-dark font-sans font-bold tracking-wider uppercase transition-colors duration-200;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-accent-navy/50;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-accent-navy;
 }
