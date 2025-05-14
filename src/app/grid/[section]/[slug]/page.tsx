@@ -1,7 +1,7 @@
 'use client';
 
 import { notFound, useRouter } from 'next/navigation';
-import { colorMap, projects, passions, about, contact } from '../../colorData';
+import data from '../../data.json';
 import { motion } from 'framer-motion';
 import ThemeToggle from '@/components/ThemeToggle';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
@@ -10,8 +10,13 @@ import { useEffect, useState } from 'react';
 import { MDXProvider } from '@mdx-js/react';
 import { use } from 'react';
 import Head from 'next/head';
+import { ColorName, getColorArray, getHexColors } from '@/lib/colors';
 
-const sectionMap: Record<string, any[]> = {
+// Get data directly 
+const { projects, passions, about, contact } = data;
+
+// Create a record with the section name as key and the data as value
+const sectionMap = {
   projects,
   passions,
   about,
@@ -85,10 +90,29 @@ export default function CardDetail({ params }: { params: Promise<{ section: stri
   const { section, slug } = use(params);
   const { theme } = useTheme();
   const router = useRouter();
-  const data = sectionMap[section];
-  const card = data ? data.find((item) => item.slug === slug) : null;
-  if (!data || !card) return notFound();
-  const [bg, text] = colorMap[card.color] ? (theme === 'dark' ? [colorMap[card.color][2], colorMap[card.color][3]] : [colorMap[card.color][0], colorMap[card.color][1]]) : ['bg-white', 'text-black'];
+  
+  // Get the section data
+  const sectionData = sectionMap[section];
+  
+  // Find the card data
+  const card = sectionData ? sectionData.find((item) => item.slug === slug) : null;
+  
+  if (!sectionData || !card) return notFound();
+  
+  // Get the color data using our new system
+  const defaultColors = ['bg-white', 'text-black', 'bg-black', 'text-white'];
+  const colorName = card.color as ColorName;
+  const colors = getColorArray(colorName) || defaultColors;
+  const hexColors = getHexColors(colorName);
+  
+  // Choose light or dark colors based on theme
+  const [bg, text] = theme === 'dark' ? [colors[2], colors[3]] : [colors[0], colors[1]];
+  const bgHex = theme === 'dark' ? hexColors.darkBg : hexColors.lightBg;
+  const textHex = theme === 'dark' ? hexColors.darkText : hexColors.lightText;
+  
+  // Log for debugging
+  console.log("Detail page colors:", colorName, colors, bg, text, bgHex, textHex);
+  
   const layoutId = `${section}-${slug}`;
 
   // Dynamic button colors for contrast
@@ -98,6 +122,7 @@ export default function CardDetail({ params }: { params: Promise<{ section: stri
   // Try to dynamically import the MDX file for this card
   const [MDXContent, setMDXContent] = useState<null | React.ComponentType<any>>(null);
   const [meta, setMeta] = useState<any>(null);
+  
   useEffect(() => {
     let cancelled = false;
     import(`../../${section}/${slug}.mdx`).then(mod => {
@@ -112,6 +137,12 @@ export default function CardDetail({ params }: { params: Promise<{ section: stri
     return () => { cancelled = true; };
   }, [section, slug]);
 
+  // Helper functions to check if card has specific properties
+  const hasTagline = (card) => 'tagline' in card;
+  const hasSubline = (card) => 'subline' in card;
+  const hasPoints = (card) => 'points' in card;
+  const hasElements = (card) => 'elements' in card;
+
   return (
     <>
       {meta && (
@@ -120,12 +151,13 @@ export default function CardDetail({ params }: { params: Promise<{ section: stri
           {meta.description && <meta name="description" content={meta.description} />}
         </Head>
       )}
-      <div className={`min-h-screen w-full ${bg} ${text}`}>
+      <div className={`min-h-screen w-full ${bg} ${text}`} style={{ backgroundColor: bgHex, color: textHex }}>
         <div className="fixed top-8 left-8 z-50">
           <button 
             onClick={() => router.push('/grid')} 
             className={`w-9 h-9 flex items-center justify-center rounded-full ${buttonBg} ${buttonText} transition-colors duration-200 hover:opacity-80`}
             aria-label="Go back to grid"
+            style={{ backgroundColor: textHex, color: bgHex }}
           >
             <ArrowLeftIcon className="w-5 h-5" />
           </button>
@@ -138,6 +170,7 @@ export default function CardDetail({ params }: { params: Promise<{ section: stri
           exit={{ y: 200, opacity: 0 }}
           transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
           className={`w-full min-h-screen ${bg} ${text}`}
+          style={{ backgroundColor: bgHex, color: textHex }}
         >
           {MDXContent && meta ? (
             <div className="w-full">
@@ -160,20 +193,20 @@ export default function CardDetail({ params }: { params: Promise<{ section: stri
                   <h1 className="font-sans font-black uppercase tracking-tight text-4xl md:text-6xl mb-2 mt-0 leading-tight">{card.title}</h1>
                 )}
                 <hr className="border-t border-white/40 dark:border-black/40 my-4 w-full" />
-                {card.tagline && (
+                {hasTagline(card) && (
                   <span className="font-serif italic text-xl md:text-2xl mb-6 -mt-2 block">{card.tagline}</span>
                 )}
-                {card.subline && (
+                {hasSubline(card) && (
                   <span className="font-serif italic text-xl md:text-2xl mb-6 block">{card.subline}</span>
                 )}
-                {card.points && (
+                {hasPoints(card) && (
                   <ul className="list-none pl-0 mb-3 flex flex-col gap-1">
                     {card.points.map((pt: string, j: number) => (
                       <li key={j} className="relative pl-5 before:content-['–'] before:absolute before:left-0 before:text-lg before:font-bold before:top-0 before:text-current">{pt}</li>
                     ))}
                   </ul>
                 )}
-                {card.elements && (
+                {hasElements(card) && (
                   <ul className="list-none pl-0 mb-3 flex flex-col gap-1">
                     {card.elements.map((el: string, j: number) => (
                       <li key={j} className="relative pl-5 before:content-['–'] before:absolute before:left-0 before:text-lg before:font-bold before:top-0 before:text-current">{el}</li>

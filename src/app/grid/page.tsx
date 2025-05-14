@@ -8,86 +8,15 @@ import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { useTheme } from '@/app/providers';
 import { MDXProvider } from '@mdx-js/react';
 
-// [lightBg, lightText, darkBg, darkText]
-const colorMap: Record<string, [string, string, string, string]> = {
-  'Deep Purple':    ['bg-[#ecd9fa]', 'text-[#2d0a4b]', 'bg-[#2d0a4b]', 'text-[#ecd9fa]'],
-  'Antique Gold':   ['bg-[#faecd9]', 'text-[#7a5a2f]', 'bg-[#7a5a2f]', 'text-[#faecd9]'],
-  'Midnight Blue':  ['bg-[#d9eafa]', 'text-[#1a3360]', 'bg-[#1a3360]', 'text-[#d9eafa]'],
-  'Burgundy':       ['bg-[#fad9df]', 'text-[#5a2323]', 'bg-[#5a2323]', 'text-[#fad9df]'],
-  'Forest Green':   ['bg-[#e0f5e9]', 'text-[#1b4d3e]', 'bg-[#1b4d3e]', 'text-[#e0f5e9]'],
-  'Charcoal Gray':  ['bg-[#e5e5e5]', 'text-[#232323]', 'bg-[#232323]', 'text-[#e5e5e5]'],
-  'Slate Teal':     ['bg-[#d6f0f2]', 'text-[#2a4d4f]', 'bg-[#2a4d4f]', 'text-[#d6f0f2]'],
-  'Steel Blue':     ['bg-[#dbe7fa]', 'text-[#2a3a4d]', 'bg-[#2a3a4d]', 'text-[#dbe7fa]'],
-  'Royal Purple':   ['bg-[#ecd9fa]', 'text-[#4b2d7a]', 'bg-[#4b2d7a]', 'text-[#ecd9fa]'],
-  'Warm Bronze':    ['bg-[#f5e6d0]', 'text-[#8c6a3f]', 'bg-[#8c6a3f]', 'text-[#f5e6d0]'],
-  'Electric Orange':['bg-[#ffe5d0]', 'text-[#ff6600]', 'bg-[#ff6600]', 'text-[#ffe5d0]'],
-  'Pure White':     ['bg-[#fff]', 'text-[#111]', 'bg-[#111]', 'text-[#fff]'],
-  'Jet Black':      ['bg-[#232323]', 'text-[#fff]', 'bg-[#fff]', 'text-[#232323]'],
-  'Canary Yellow':  ['bg-[#fff9d0]', 'text-[#bfa800]', 'bg-[#bfa800]', 'text-[#fff9d0]'],
-  'Alpine Green':   ['bg-[#e0f5e9]', 'text-[#1b4d3e]', 'bg-[#1b4d3e]', 'text-[#e0f5e9]'],
-  'Cobalt Blue':    ['bg-[#dbe7fa]', 'text-[#1a3360]', 'bg-[#1a3360]', 'text-[#dbe7fa]'],
-  'Stone Gray':     ['bg-[#eaeaea]', 'text-[#232323]', 'bg-[#232323]', 'text-[#eaeaea]'],
-  'Blush Pink':     ['bg-[#fad9df]', 'text-[#5a2323]', 'bg-[#5a2323]', 'text-[#fad9df]'],
-  'Oil Black':      ['bg-[#232323]', 'text-[#fff]', 'bg-[#fff]', 'text-[#232323]'],
-  'Snow White':     ['bg-[#fff]', 'text-[#232323]', 'bg-[#232323]', 'text-[#fff]'],
-  'Charcoal Black': ['bg-[#232323]', 'text-[#fff]', 'bg-[#fff]', 'text-[#232323]'],
-};
+// Import data
+import data from './data.json';
+// Import the new color system
+import { ColorName, getColorClasses, getColorArray, getHexColors } from '@/lib/colors';
 
-export const projects = [
-  { title: 'LUXSIGNALS', tagline: 'Empowering Traders with AI', color: 'Deep Purple', slug: 'luxsignals' },
-  { title: "Parfums d'Héritage", tagline: 'A New Kind of Luxury Fragrance', color: 'Antique Gold', slug: 'parfums-d-heritage' },
-  { title: 'Music Production', tagline: 'Crafting Auditory Experiences', color: 'Midnight Blue', slug: 'music-production' },
-  { title: 'Study with Filo', tagline: 'Making Studying Easier', color: 'Burgundy', slug: 'study-with-filo' },
-  { title: "Trader's Edge", tagline: 'Custom TradingView Indicators', color: 'Forest Green', slug: 'traders-edge' },
-  { title: 'LuxSignals Blog Automation', tagline: 'SEO-Driven Content on Autopilot', color: 'Charcoal Gray', slug: 'luxsignals-blog-automation' },
-  { title: 'AI Trading Bot Prototype', tagline: 'Realtime Quant Models', color: 'Slate Teal', slug: 'ai-trading-bot-prototype' },
-  { title: 'Nicotine-Free Vape Concept', tagline: 'Smoking Cessation Innovation', color: 'Steel Blue', slug: 'nicotine-free-vape-concept' },
-];
+const { projects, passions, about, contact } = data;
 
-export const passions = [
-  { title: 'Music', subline: 'Sound as Storytelling', color: 'Royal Purple', slug: 'music' },
-  { title: 'Perfumery', subline: 'Swiss Elegance in a Bottle', color: 'Warm Bronze', slug: 'perfumery' },
-  { title: 'Running', subline: '4AM 5K Daily, Fog & All', color: 'Electric Orange', slug: 'running' },
-  { title: 'Faith', subline: 'Kingdom Capitalism & Grace', color: 'Pure White', slug: 'faith' },
-  { title: 'Graphic Design', subline: 'Affinity & Figma Mastery', color: 'Jet Black', slug: 'graphic-design' },
-  { title: 'Videography', subline: 'Frame by Frame Storytelling', color: 'Canary Yellow', slug: 'videography' },
-  { title: 'Photography', subline: 'Capturing Swiss Landscapes', color: 'Alpine Green', slug: 'photography' },
-  { title: 'Debate & Research', subline: 'Data-Driven Persuasion', color: 'Cobalt Blue', slug: 'debate-and-research' },
-];
-
-export const about = [
-  { title: 'ABOUT ELIAS', points: [
-    '17-year-old entrepreneur & Gymnasium student',
-    "Co-founder of LuxSignals & Parfums d'Héritage",
-    'Python, JavaScript, Java & Pine Script coder',
-    'Early riser: 4AM runs & disciplined grind',
-    'Devout Christian (ICF Zürich / FEG Wallisellen)',
-  ], color: 'Stone Gray', wide: true, slug: 'about-elias' },
-  { title: 'MILESTONES', points: [
-    'First SaaS launch at 16',
-    'Spotify producer since 15',
-    'GmbH set-up with Leo',
-  ], color: 'Blush Pink', slug: 'milestones' },
-  { title: 'TOOLKIT', points: [
-    'Next.js, Tailwind CSS, Framer Motion',
-    'React Native, Figma, Affinity Designer',
-    'SEO, EmailJS, Vercel Deploys',
-    'Branding, Marketing, Automation',
-  ], color: 'Oil Black', slug: 'toolkit' },
-];
-
-export const contact = [
-  { title: "LET'S CONNECT", elements: [
-    'Email form (EmailJS)',
-    'Social icons: Spotify, GitHub, Instagram',
-    'elias@example.com',
-  ], color: 'Snow White', wide: true, slug: 'lets-connect' },
-  { title: 'QUICK LINKS', elements: [
-    'Resume PDF',
-    'LinkedIn Profile',
-    'DistroKid Music Page',
-  ], color: 'Charcoal Black', slug: 'quick-links' },
-];
+// Define type for modalColors state
+type ColorArray = string[];
 
 const containerVariants = {
   hidden: { opacity: 0, y: 24 },
@@ -115,7 +44,7 @@ export default function Grid() {
   const [hoveredCard, setHoveredCard] = useState<null | string>(null);
   const [MDXContent, setMDXContent] = useState<null | React.ComponentType<any>>(null);
   const [meta, setMeta] = useState<any>(null);
-  const [modalColors, setModalColors] = useState<[string, string, string, string] | null>(null);
+  const [modalColors, setModalColors] = useState<string[] | null>(null);
   const { section: modalSection, idx: modalIdx } = activeCard || { section: '', idx: -1 };
   const mdxComponents = {
     h1: (props: any) => (
@@ -188,7 +117,17 @@ export default function Grid() {
         setMDXContent(() => mod.default);
         setMeta(mod.meta || mod.frontmatter || {});
         const card = getCard(section, idx);
-        setModalColors(card && colorMap[card.color] ? colorMap[card.color] : null);
+        if (card && card.color) {
+          const colorName = card.color as ColorName;
+          const colors = getColorArray(colorName);
+          if (colors) {
+            setModalColors(colors);
+          } else {
+            setModalColors(null);
+          }
+        } else {
+          setModalColors(null);
+        }
       }).catch(() => {
         setMDXContent(null);
         setMeta(null);
@@ -212,18 +151,38 @@ export default function Grid() {
     return () => window.removeEventListener('popstate', onPopState);
   }, [activeCard]);
 
-  const getColors = (color: string): [string, string] => {
-    const arr = colorMap[color] || colorMap['Deep Purple'];
-    return theme === 'dark' ? [arr[2], arr[3]] : [arr[0], arr[1]];
+  const getColors = (color: string): [string, string, string] => {
+    // Cast color to our type system as a safety measure
+    const colorName = color as ColorName;
+    
+    // Use our getColorArray utility - this returns colors in the same format as before
+    // to ensure compatibility with existing code
+    const colors = getColorArray(colorName);
+    
+    // Get hex colors for styling
+    const hexColors = getHexColors(colorName);
+    
+    // Debug log the color values
+    console.log("getColors for", colorName, "returns", colors, "theme:", theme);
+    
+    // Use the right colors based on theme
+    return theme === 'dark' ? 
+      [colors[2], colors[3], hexColors.darkBg] : 
+      [colors[0], colors[1], hexColors.lightBg];
   };
+  
   const highlight = theme === 'dark' ? 'bg-[#222]' : 'bg-[#f3f3f3]';
 
   // Helper to get card data by section and index
   const getCard = (section: string, idx: number) => {
-    if (section === 'projects') return projects[idx];
-    if (section === 'passions') return passions[idx];
-    if (section === 'about') return about[idx];
-    if (section === 'contact') return contact[idx];
+    if (section === 'projects' && idx >= 0 && idx < projects.length) 
+      return projects[idx];
+    if (section === 'passions' && idx >= 0 && idx < passions.length) 
+      return passions[idx];
+    if (section === 'about' && idx >= 0 && idx < about.length) 
+      return about[idx];
+    if (section === 'contact' && idx >= 0 && idx < contact.length) 
+      return contact[idx];
     return null;
   };
 
@@ -274,7 +233,7 @@ export default function Grid() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           {projects.map((p, i) => {
-            const [bg, text] = getColors(p.color);
+            const [bg, text, bgHex] = getColors(p.color);
             const layoutId = `projects-${p.slug}`;
             const isActive = activeCard && `${activeCard.section}-${activeCard.idx}` === layoutId;
             const isHovered = hoveredCard === layoutId;
@@ -294,7 +253,10 @@ export default function Grid() {
                   animate={isActive || isHovered ? { height: '100%' } : { height: '0%' }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                   className={`${bg} absolute left-0 top-0 w-full z-10`}
-                  style={{ pointerEvents: 'none' }}
+                  style={{ 
+                    pointerEvents: 'none',
+                    backgroundColor: isActive || isHovered ? bgHex : 'transparent' 
+                  }}
                 />
                 <span
                   className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
@@ -317,7 +279,7 @@ export default function Grid() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           {passions.map((p, i) => {
-            const [bg, text] = getColors(p.color);
+            const [bg, text, bgHex] = getColors(p.color);
             const layoutId = `passions-${p.slug}`;
             const isActive = activeCard && `${activeCard.section}-${activeCard.idx}` === layoutId;
             const isHovered = hoveredCard === layoutId;
@@ -337,7 +299,10 @@ export default function Grid() {
                   animate={isActive || isHovered ? { height: '100%' } : { height: '0%' }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                   className={`${bg} absolute left-0 top-0 w-full z-10`}
-                  style={{ pointerEvents: 'none' }}
+                  style={{ 
+                    pointerEvents: 'none',
+                    backgroundColor: isActive || isHovered ? bgHex : 'transparent' 
+                  }}
                 />
                 <span
                   className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
@@ -360,7 +325,7 @@ export default function Grid() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           {about.map((a, i) => {
-            const [bg, text] = getColors(a.color);
+            const [bg, text, bgHex] = getColors(a.color);
             const layoutId = `about-${a.slug}`;
             const isActive = activeCard && `${activeCard.section}-${activeCard.idx}` === layoutId;
             const isHovered = hoveredCard === layoutId;
@@ -380,7 +345,10 @@ export default function Grid() {
                   animate={isActive || isHovered ? { height: '100%' } : { height: '0%' }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                   className={`${bg} absolute left-0 top-0 w-full z-10`}
-                  style={{ pointerEvents: 'none' }}
+                  style={{ 
+                    pointerEvents: 'none',
+                    backgroundColor: isActive || isHovered ? bgHex : 'transparent' 
+                  }}
                 />
                 <span
                   className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
@@ -401,7 +369,7 @@ export default function Grid() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {contact.map((c, i) => {
-            const [bg, text] = getColors(c.color);
+            const [bg, text, bgHex] = getColors(c.color);
             const layoutId = `contact-${c.slug}`;
             const isActive = activeCard && `${activeCard.section}-${activeCard.idx}` === layoutId;
             const isHovered = hoveredCard === layoutId;
@@ -421,7 +389,10 @@ export default function Grid() {
                   animate={isActive || isHovered ? { height: '100%' } : { height: '0%' }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                   className={`${bg} absolute left-0 top-0 w-full z-10`}
-                  style={{ pointerEvents: 'none' }}
+                  style={{ 
+                    pointerEvents: 'none',
+                    backgroundColor: isActive || isHovered ? bgHex : 'transparent' 
+                  }}
                 />
                 <span
                   className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
@@ -456,9 +427,9 @@ export default function Grid() {
                   window.history.back();
                   modalOpenedRef.current = false;
                 }
-              }} className={`w-9 h-9 flex items-center justify-center !${modalColors[theme === 'dark' ? 3 : 1].replace('text-', 'bg-')} !${modalColors[theme === 'dark' ? 2 : 0].replace('bg-', 'text-')} transition-colors duration-200`}><ArrowLeftIcon className="w-6 h-6" /></button>
+              }} className={`w-9 h-9 flex items-center justify-center ${modalColors[theme === 'dark' ? 3 : 1].replace('text-', 'bg-')} ${modalColors[theme === 'dark' ? 2 : 0].replace('bg-', 'text-')} transition-colors duration-200`}><ArrowLeftIcon className="w-6 h-6" /></button>
             </div>
-            <ThemeToggle className={`fixed top-8 right-8 z-50 !${modalColors[theme === 'dark' ? 3 : 1].replace('text-', 'bg-')} !${modalColors[theme === 'dark' ? 2 : 0].replace('bg-', 'text-')}`} />
+            <ThemeToggle className={`fixed top-8 right-8 z-50 ${modalColors[theme === 'dark' ? 3 : 1].replace('text-', 'bg-')} ${modalColors[theme === 'dark' ? 2 : 0].replace('bg-', 'text-')}`} />
             <div className="w-full flex justify-center overflow-y-auto max-h-screen">
               <div className="w-full max-w-3xl md:max-w-4xl px-4 md:px-12 py-16 md:py-32 flex flex-col items-start md:items-start bg-transparent">
                 {meta.title && (
