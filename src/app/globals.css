@@ -51,6 +51,10 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .hyphenate-important {
+    hyphens: auto !important;
+  }
 }
 
 /* Custom scrollbar */

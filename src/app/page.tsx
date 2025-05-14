@@ -47,7 +47,7 @@ export default function Home() {
               <button
                 onClick={() => {
                   setExiting(true);
-                  setTimeout(() => router.push('/grid'), 300);
+                  setTimeout(() => router.push('/about'), 300);
                 }}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
@@ -88,14 +88,6 @@ export default function Home() {
         }
       `}</style>
       {/* Home-only noise overlay */}
-      <div
-        className="pointer-events-none fixed inset-0 z-[9999] mix-blend-luminosity opacity-[0.06]"
-        style={{
-          backgroundImage: "url('/img/noise.png')",
-          backgroundRepeat: 'repeat',
-          backgroundSize: 'auto',
-        }}
-      />
     </main>
   );
 } 

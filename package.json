@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@heroicons/react": "^2.2.0",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.3.2",
     "framer-motion": "^11.0.8",
     "next": "15.3.2",
+    "openai": "^4.98.0",
     "react": "^18",
     "react-dom": "^18"
   },
