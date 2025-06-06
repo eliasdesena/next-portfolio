@@ -4,6 +4,7 @@ import { useState, ChangeEvent, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
+import Image from 'next/image';
 
 // Define content for vibe-specific slides (Expanded Content)
 const vibeContent = {
@@ -32,6 +33,28 @@ const vibeContent = {
       { title: 'Constant Growth', text: 'I\'m on a mission to level up in faith, fitness, school, and financial savvy. Every week I set micro-goals—finishing a coding tutorial, hitting a new PR in calisthenics, or reading a chapter of scripture—and celebrate the small wins that add up to big change.' },
     ],
   };
+
+// Helper function to generate all image paths for pre-loading
+const getAllImagePaths = () => {
+  const vibes = Object.keys(vibeContent) as (keyof typeof vibeContent)[];
+  const imagePaths: string[] = [];
+  
+  vibes.forEach(vibe => {
+    vibeContent[vibe].forEach((_, index) => {
+      imagePaths.push(`/img/vibe-${vibe.toLowerCase()}-${index + 1}.jpg`);
+    });
+  });
+  
+  return imagePaths;
+};
+
+// Pre-load images function
+const preloadImages = (imagePaths: string[]) => {
+  imagePaths.forEach(path => {
+    const img = new window.Image();
+    img.src = path;
+  });
+};
 
 // Define the flow of steps
 const steps = [
@@ -64,7 +87,7 @@ const IntroFlow = () => {
 
   const router = useRouter();
 
-  // Effect to read initial dark mode state from local storage
+  // Effect to read initial dark mode state from local storage and pre-load images
   useEffect(() => {
     const savedMode = localStorage.getItem('darkMode');
     if (savedMode !== null) {
@@ -74,6 +97,10 @@ const IntroFlow = () => {
        // Default to light mode or detect system preference if desired
        document.documentElement.classList.remove('dark');
     }
+
+    // Pre-load all vibe slide images for better performance
+    const imagePaths = getAllImagePaths();
+    preloadImages(imagePaths);
   }, []);
 
   // Effect to update local storage and HTML class when mode changes
@@ -483,25 +510,26 @@ const IntroFlow = () => {
                         <div
                            className="relative w-full md:w-1/2 h-1/2 md:h-full flex flex-col items-center justify-center border-b-2 md:border-b-0 md:border-r-2 border-black dark:border-white p-8 md:p-12 overflow-hidden"
                         >
-                            {/* Background Image Placeholder */}
+                            {/* Optimized Background Image with Next.js Image */}
                             {backgroundImage && (
-                                <div
-                                    className="absolute bg-cover bg-center"
+                                <Image
+                                    src={backgroundImage}
+                                    alt={`${selectedVibe} vibe slide ${currentVibeSlideIndex + 1}`}
+                                    fill
+                                    className="object-cover"
                                     style={{
-                                        backgroundImage: `url(${backgroundImage})`,
-                                        opacity: 1, // Lower opacity for background effec
                                         filter: 'blur(5px)',
-                                        top: '-10px', // Extend beyond the top edge
-                                        right: '-10px', // Extend beyond the right edge
-                                        bottom: '-10px', // Extend beyond the bottom edge
-                                        left: '-10px', // Extend beyond the left edge
+                                        transform: 'scale(1.1)', // Slight scale to prevent blur edge artifacts
                                     }}
-                                ></div>
+                                    priority={currentVibeSlideIndex < 2} // Prioritize first 2 slides
+                                    quality={85}
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                />
                             )}
                             {/* Semi-transparent overlay to help with text legibility */}
-                            <div className="absolute inset-0 bg-black opacity-50 dark:bg-white dark:opacity-20"></div> {/* Adjust overlay for dark mode */}
+                            <div className="absolute inset-0 bg-black opacity-50 dark:bg-white dark:opacity-20 z-10"></div>
                             {/* Content overlay */}
-                            <div className="relative z-10 flex shadow-lg flex-col mix-blend-exclusion items-start justify-center text-left w-full">
+                            <div className="relative z-20 flex shadow-lg flex-col mix-blend-exclusion items-start justify-center text-left w-full">
                                  <h2 className="text-7xl text-white md:text-9xl uppercase lg:text-[100px] font-black font-sans leading-none not-italic text-wrap hyphenate-important break-words tracking-[-0.04em]">{currentSlide.title}</h2>
                                  {/* Display slide number here too for strong visual hierarchy */}
                                  <div className="text-lg uppercase text-white font-sans font-bold mt-4 tracking-[-0.04em]">
