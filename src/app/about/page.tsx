@@ -151,7 +151,7 @@ export default function Grid() {
     return () => window.removeEventListener('popstate', onPopState);
   }, [activeCard]);
 
-  const getColors = (color: string): [string, string, string] => {
+  const getColors = (color: string): [string, string, string, string] => {
     // Cast color to our type system as a safety measure
     const colorName = color as ColorName;
     
@@ -165,10 +165,10 @@ export default function Grid() {
     // Debug log the color values
     console.log("getColors for", colorName, "returns", colors, "theme:", theme);
     
-    // Use the right colors based on theme
+    // Return [bgClass, textClass, bgHex, textHex] based on theme
     return theme === 'dark' ? 
-      [colors[2], colors[3], hexColors.darkBg] : 
-      [colors[0], colors[1], hexColors.lightBg];
+      [colors[2], colors[3], hexColors.darkBg, hexColors.darkText] : 
+      [colors[0], colors[1], hexColors.lightBg, hexColors.lightText];
   };
   
   const highlight = theme === 'dark' ? 'bg-[#222]' : 'bg-[#f3f3f3]';
@@ -222,7 +222,7 @@ export default function Grid() {
           >
             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300" />
             <span className="relative z-10 font-sans font-black text-2xl md:text-4xl lg:text-6xl text-white drop-shadow-lg text-center px-4">
-              Nice to meet you, I'm Elias!
+              nice to meet you, i'm elias
             </span>
           </div>
         </div>
@@ -233,16 +233,17 @@ export default function Grid() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           {projects.map((p, i) => {
-            const [bg, text, bgHex] = getColors(p.color);
+            const [bg, text, bgHex, textHex] = getColors(p.color);
             const layoutId = `projects-${p.slug}`;
             const isActive = activeCard && `${activeCard.section}-${activeCard.idx}` === layoutId;
             const isHovered = hoveredCard === layoutId;
+            const grayTextHex = theme === 'dark' ? '#eaeaea' : '#232323';
             return (
               <motion.div
                 key={i}
                 layoutId={layoutId}
                 variants={cardVariants}
-                className={`relative flex flex-col items-center justify-center aspect-square text-center p-6 select-none transition-colors duration-200 cursor-pointer overflow-hidden ${getZIndex(layoutId)}`}
+                className={`relative flex flex-col items-center justify-center aspect-square text-center p-6 select-none cursor-pointer overflow-hidden ${getZIndex(layoutId)}`}
                 onMouseEnter={() => setHoveredCard(layoutId)}
                 onMouseLeave={() => setHoveredCard(null)}
                 onClick={() => router.push(`/about/projects/${p.slug}`)}
@@ -252,22 +253,32 @@ export default function Grid() {
                   initial={false}
                   animate={isActive || isHovered ? { height: '100%' } : { height: '0%' }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                  className={`${bg} absolute left-0 top-0 w-full z-10`}
+                  className={`absolute left-0 top-0 w-full z-10`}
                   style={{ 
                     pointerEvents: 'none',
-                    backgroundColor: isActive || isHovered ? bgHex : 'transparent' 
+                    backgroundColor: bgHex
                   }}
                 />
-                <span
-                  className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
+                <motion.span
+                  initial={false}
+                  animate={{
+                    color: isActive || isHovered ? textHex : grayTextHex
+                  }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20`}
                 >
                   {p.title}
-                </span>
-                <span
-                  className={`font-serif italic text-lg md:text-xl lg:text-2xl relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
+                </motion.span>
+                <motion.span
+                  initial={false}
+                  animate={{
+                    color: isActive || isHovered ? textHex : grayTextHex
+                  }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className={`font-serif italic text-lg md:text-xl lg:text-2xl relative z-20`}
                 >
                   &quot;{p.tagline}&quot;
-                </span>
+                </motion.span>
               </motion.div>
             );
           })}
@@ -279,16 +290,17 @@ export default function Grid() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           {passions.map((p, i) => {
-            const [bg, text, bgHex] = getColors(p.color);
+            const [bg, text, bgHex, textHex] = getColors(p.color);
             const layoutId = `passions-${p.slug}`;
             const isActive = activeCard && `${activeCard.section}-${activeCard.idx}` === layoutId;
             const isHovered = hoveredCard === layoutId;
+            const grayTextHex = theme === 'dark' ? '#eaeaea' : '#232323';
             return (
               <motion.div
                 key={i}
                 layoutId={layoutId}
                 variants={cardVariants}
-                className={`relative flex flex-col items-center justify-center aspect-square text-center p-6 select-none transition-colors duration-200 cursor-pointer overflow-hidden ${getZIndex(layoutId)}`}
+                className={`relative flex flex-col items-center justify-center aspect-square text-center p-6 select-none cursor-pointer overflow-hidden ${getZIndex(layoutId)}`}
                 onMouseEnter={() => setHoveredCard(layoutId)}
                 onMouseLeave={() => setHoveredCard(null)}
                 onClick={() => router.push(`/about/passions/${p.slug}`)}
@@ -298,22 +310,32 @@ export default function Grid() {
                   initial={false}
                   animate={isActive || isHovered ? { height: '100%' } : { height: '0%' }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                  className={`${bg} absolute left-0 top-0 w-full z-10`}
+                  className={`absolute left-0 top-0 w-full z-10`}
                   style={{ 
                     pointerEvents: 'none',
-                    backgroundColor: isActive || isHovered ? bgHex : 'transparent' 
+                    backgroundColor: bgHex
                   }}
                 />
-                <span
-                  className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
+                <motion.span
+                  initial={false}
+                  animate={{
+                    color: isActive || isHovered ? textHex : grayTextHex
+                  }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20`}
                 >
                   {p.title}
-                </span>
-                <span
-                  className={`font-serif italic text-lg md:text-xl lg:text-2xl relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
+                </motion.span>
+                <motion.span
+                  initial={false}
+                  animate={{
+                    color: isActive || isHovered ? textHex : grayTextHex
+                  }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className={`font-serif italic text-lg md:text-xl lg:text-2xl relative z-20`}
                 >
                   &quot;{p.subline}&quot;
-                </span>
+                </motion.span>
               </motion.div>
             );
           })}
@@ -325,16 +347,17 @@ export default function Grid() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12">
           {about.map((a, i) => {
-            const [bg, text, bgHex] = getColors(a.color);
+            const [bg, text, bgHex, textHex] = getColors(a.color);
             const layoutId = `about-${a.slug}`;
             const isActive = activeCard && `${activeCard.section}-${activeCard.idx}` === layoutId;
             const isHovered = hoveredCard === layoutId;
+            const grayTextHex = theme === 'dark' ? '#eaeaea' : '#232323';
             return (
               <motion.div
                 key={i}
                 layoutId={layoutId}
                 variants={cardVariants}
-                className={`relative flex flex-col items-center justify-center aspect-square md:aspect-auto text-center p-6 select-none transition-colors duration-200 cursor-pointer overflow-hidden ${a.wide ? 'md:col-span-2' : ''} ${getZIndex(layoutId)}`}
+                className={`relative flex flex-col items-center justify-center aspect-square md:aspect-auto text-center p-6 select-none cursor-pointer overflow-hidden ${a.wide ? 'md:col-span-2' : ''} ${getZIndex(layoutId)}`}
                 onMouseEnter={() => setHoveredCard(layoutId)}
                 onMouseLeave={() => setHoveredCard(null)}
                 onClick={() => router.push(`/about/about/${a.slug}`)}
@@ -344,20 +367,32 @@ export default function Grid() {
                   initial={false}
                   animate={isActive || isHovered ? { height: '100%' } : { height: '0%' }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                  className={`${bg} absolute left-0 top-0 w-full z-10`}
+                  className={`absolute left-0 top-0 w-full z-10`}
                   style={{ 
                     pointerEvents: 'none',
-                    backgroundColor: isActive || isHovered ? bgHex : 'transparent' 
+                    backgroundColor: bgHex
                   }}
                 />
-                <span
-                  className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
+                <motion.span
+                  initial={false}
+                  animate={{
+                    color: isActive || isHovered ? textHex : grayTextHex
+                  }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20`}
                 >
                   {a.title}
-                </span>
-                <ul className={`font-serif italic text-lg md:text-xl lg:text-2xl space-y-1 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}>
+                </motion.span>
+                <motion.ul 
+                  initial={false}
+                  animate={{
+                    color: isActive || isHovered ? textHex : grayTextHex
+                  }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className={`font-serif italic text-lg md:text-xl lg:text-2xl space-y-1 relative z-20`}
+                >
                   {a.points.map((pt, j) => <li key={j}>{pt}</li>)}
-                </ul>
+                </motion.ul>
               </motion.div>
             );
           })}
@@ -369,16 +404,17 @@ export default function Grid() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {contact.map((c, i) => {
-            const [bg, text, bgHex] = getColors(c.color);
+            const [bg, text, bgHex, textHex] = getColors(c.color);
             const layoutId = `contact-${c.slug}`;
             const isActive = activeCard && `${activeCard.section}-${activeCard.idx}` === layoutId;
             const isHovered = hoveredCard === layoutId;
+            const grayTextHex = theme === 'dark' ? '#eaeaea' : '#232323';
             return (
               <motion.div
                 key={i}
                 layoutId={layoutId}
                 variants={cardVariants}
-                className={`relative flex flex-col items-center justify-center aspect-square md:aspect-auto text-center p-6 select-none transition-colors duration-200 cursor-pointer overflow-hidden ${c.wide ? 'md:col-span-2' : ''} ${getZIndex(layoutId)}`}
+                className={`relative flex flex-col items-center justify-center aspect-square md:aspect-auto text-center p-6 select-none cursor-pointer overflow-hidden ${c.wide ? 'md:col-span-2' : ''} ${getZIndex(layoutId)}`}
                 onMouseEnter={() => setHoveredCard(layoutId)}
                 onMouseLeave={() => setHoveredCard(null)}
                 onClick={() => router.push(`/about/contact/${c.slug}`)}
@@ -388,20 +424,32 @@ export default function Grid() {
                   initial={false}
                   animate={isActive || isHovered ? { height: '100%' } : { height: '0%' }}
                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                  className={`${bg} absolute left-0 top-0 w-full z-10`}
+                  className={`absolute left-0 top-0 w-full z-10`}
                   style={{ 
                     pointerEvents: 'none',
-                    backgroundColor: isActive || isHovered ? bgHex : 'transparent' 
+                    backgroundColor: bgHex
                   }}
                 />
-                <span
-                  className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}
+                <motion.span
+                  initial={false}
+                  animate={{
+                    color: isActive || isHovered ? textHex : grayTextHex
+                  }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  className={`font-sans font-black text-xl md:text-2xl lg:text-3xl uppercase mb-2 relative z-20`}
                 >
                   {c.title}
-                </span>
-                <ul className={`font-serif italic text-lg md:text-xl lg:text-2xl space-y-1 relative z-20 transition-colors duration-200 ${isActive || isHovered ? text : grayText}`}>
-                  {c.elements.map((el, j) => <li key={j}>{el}</li>)}
-                </ul>
+                </motion.span>
+                                 <motion.ul 
+                   initial={false}
+                   animate={{
+                     color: isActive || isHovered ? textHex : grayTextHex
+                   }}
+                   transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                   className={`font-serif italic text-lg md:text-xl lg:text-2xl space-y-1 relative z-20`}
+                 >
+                   {c.elements.map((el, j) => <li key={j}>{el}</li>)}
+                 </motion.ul>
               </motion.div>
             );
           })}

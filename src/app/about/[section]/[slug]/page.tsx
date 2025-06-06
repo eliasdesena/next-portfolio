@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { MDXProvider } from '@mdx-js/react';
 import { use } from 'react';
 import Head from 'next/head';
+import Image from 'next/image';
 import { ColorName, getColorArray, getHexColors } from '@/lib/colors';
 
 // Get data directly 
@@ -23,9 +24,48 @@ const sectionMap = {
   contact,
 };
 
+// Custom Image component for MDX with optimized loading
+const MDXImage = ({ src, alt, width, height, className, ...props }: {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  className?: string;
+  [key: string]: any;
+}) => {
+  // If width and height are provided, use them
+  if (width && height) {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        className={`my-4 rounded shadow max-w-full h-auto ${className || ''}`}
+        {...props}
+      />
+    );
+  }
+  
+  // Otherwise use responsive approach with fill
+  return (
+    <div className="relative w-full my-4">
+      <Image
+        src={src}
+        alt={alt}
+        width={800}
+        height={400}
+        className={`rounded shadow w-full h-auto ${className || ''}`}
+        style={{ width: '100%', height: 'auto' }}
+        {...props}
+      />
+    </div>
+  );
+};
+
 const mdxComponents = {
   h1: (props: any) => (
-    <h1 className="font-sans font-black uppercase tracking-tight text-4xl md:text-6xl mb-2 mt-0 leading-tight">{props.children}</h1>
+    <h1 className="font-sans font-black uppercase tracking-tight text-3xl md:text-5xl mb-2 mt-0 leading-tight">{props.children}</h1>
   ),
   h2: (props: any) => (
     <h2 className="font-sans font-bold uppercase tracking-tight text-2xl md:text-3xl mb-2 mt-8">{props.children}</h2>
@@ -37,7 +77,7 @@ const mdxComponents = {
     <h4 className="font-sans font-bold uppercase tracking-tight text-lg md:text-xl mb-2 mt-4">{props.children}</h4>
   ),
   p: (props: any) => (
-    <p className="font-sans text-base md:text-lg mb-3 leading-relaxed">{props.children}</p>
+    <p className="font-sans text-base md:text-lg mb-3 opacity-80 leading-relaxed">{props.children}</p>
   ),
   ul: (props: any) => (
     <ul className="list-none pl-0 mb-3 flex flex-col gap-1">{props.children}</ul>
@@ -67,9 +107,8 @@ const mdxComponents = {
   em: (props: any) => (
     <em className="italic font-serif">{props.children}</em>
   ),
-  img: (props: any) => (
-    <img className="my-4 rounded shadow max-w-full h-auto" {...props} />
-  ),
+  img: (props: any) => <MDXImage {...props} />,
+  Image: (props: any) => <MDXImage {...props} />,
   table: (props: any) => (
     <table className="w-full border-collapse my-6 text-left text-base">
       {props.children}
@@ -176,7 +215,7 @@ export default function CardDetail({ params }: { params: Promise<{ section: stri
             <div className="w-full">
               <div className="w-full max-w-3xl md:max-w-4xl mx-auto px-4 md:px-12 py-16 md:py-32 flex flex-col items-start md:items-start">
                 {meta.title && (
-                  <h1 className="font-sans font-black uppercase tracking-tight text-4xl md:text-6xl mb-2 mt-0 leading-tight">{meta.title}</h1>
+                  <h1 className="font-sans font-black uppercase tracking-tight text-6xl md:text-8xl mb-2 mt-0 leading-tight">{meta.title}</h1>
                 )}
                 {meta.tagline && (
                   <span className="font-serif italic text-xl md:text-2xl mb-6 -mt-2 block">{meta.tagline}</span>
