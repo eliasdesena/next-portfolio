@@ -41,7 +41,7 @@ const MDXImage = ({ src, alt, width, height, className, ...props }: {
         alt={alt}
         width={width}
         height={height}
-        className={`my-4 rounded shadow max-w-full h-auto ${className || ''}`}
+        className={`my-4 shadow max-w-full h-auto ${className || ''}`}
         {...props}
       />
     );
@@ -55,7 +55,7 @@ const MDXImage = ({ src, alt, width, height, className, ...props }: {
         alt={alt}
         width={800}
         height={400}
-        className={`rounded shadow w-full h-auto ${className || ''}`}
+        className={`shadow w-full h-auto ${className || ''}`}
         style={{ width: '100%', height: 'auto' }}
         {...props}
       />
@@ -92,10 +92,10 @@ const mdxComponents = {
     <blockquote className="border-l-4 border-current pl-4 italic opacity-80 my-4 font-serif text-lg">{props.children}</blockquote>
   ),
   code: (props: any) => (
-    <code className="font-mono bg-black/10 dark:bg-white/10 px-1 py-0.5 rounded text-sm">{props.children}</code>
+            <code className="font-mono bg-black/10 dark:bg-white/10 px-1 py-0.5 text-sm">{props.children}</code>
   ),
   pre: (props: any) => (
-    <pre className="font-mono bg-black/10 dark:bg-white/10 p-4 rounded mb-4 overflow-x-auto text-sm">{props.children}</pre>
+          <pre className="font-mono bg-black/10 dark:bg-white/10 p-4 mb-4 overflow-x-auto text-sm">{props.children}</pre>
   ),
   a: (props: any) => (
     <a className="underline underline-offset-2 hover:text-accent-navy transition-colors" {...props} />
@@ -194,7 +194,7 @@ export default function CardDetail({ params }: { params: Promise<{ section: stri
         <div className="fixed top-8 left-8 z-50">
           <button 
             onClick={() => router.push('/about')} 
-            className={`w-9 h-9 flex items-center justify-center rounded-full ${buttonBg} ${buttonText} transition-colors duration-200 hover:opacity-80`}
+            className={`w-9 h-9 flex items-center justify-center ${buttonBg} ${buttonText} transition-colors duration-200 hover:opacity-80`}
             aria-label="Go back to About"
             style={{ backgroundColor: textHex, color: bgHex }}
           >

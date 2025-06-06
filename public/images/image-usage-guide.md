@@ -106,7 +106,7 @@ public/
   alt="Custom Styled Image" 
   width={800} 
   height={400} 
-  className="rounded-lg border-2 border-white/20 shadow-lg"
+  className="border-2 border-white/20 shadow-lg"
 />
 ```
 

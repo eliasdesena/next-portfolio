@@ -75,10 +75,10 @@ export default function Grid() {
       <blockquote className="border-l-4 border-current pl-4 italic opacity-80 my-4 font-serif text-lg">{props.children}</blockquote>
     ),
     code: (props: any) => (
-      <code className="font-mono bg-black/10 dark:bg-white/10 px-1 py-0.5 rounded text-sm">{props.children}</code>
+      <code className="font-mono bg-black/10 dark:bg-white/10 px-1 py-0.5 text-sm">{props.children}</code>
     ),
     pre: (props: any) => (
-      <pre className="font-mono bg-black/10 dark:bg-white/10 p-4 rounded mb-4 overflow-x-auto text-sm">{props.children}</pre>
+      <pre className="font-mono bg-black/10 dark:bg-white/10 p-4 mb-4 overflow-x-auto text-sm">{props.children}</pre>
     ),
     a: (props: any) => (
       <a className="underline underline-offset-2 hover:text-accent-navy transition-colors" {...props} />
@@ -91,7 +91,7 @@ export default function Grid() {
       <em className="italic font-serif">{props.children}</em>
     ),
     img: (props: any) => (
-      <img className="my-4 rounded shadow max-w-full h-auto" {...props} />
+      <img className="my-4 shadow max-w-full h-auto" {...props} />
     ),
     table: (props: any) => (
       <table className="w-full border-collapse my-6 text-left text-base">

@@ -649,7 +649,7 @@ const IntroFlow = () => {
       {currentStepIndex > 0 && (
         <button
           onClick={goBack}
-          className="absolute top-4 left-4 z-50 p-2 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-white"
+          className="absolute top-4 left-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 dark:text-white"
           aria-label="Go back"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -661,7 +661,7 @@ const IntroFlow = () => {
        {/* Dark Mode Toggle Button */}
        <button
            onClick={toggleDarkMode}
-           className="absolute top-4 right-4 z-50 p-2 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-white"
+           className="absolute top-4 right-4 z-50 p-2 bg-gray-200 dark:bg-gray-700 dark:text-white"
            aria-label="Toggle dark mode"
        >
            {isDarkMode ? (
